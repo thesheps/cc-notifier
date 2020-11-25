@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, Menu, Tray, nativeImage } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
 
@@ -29,6 +29,21 @@ function createWindow() {
         mainWindow = null;
     });
 }
+
+let tray = null
+app.whenReady().then(() => {
+    tray = new Tray(nativeImage.createEmpty());
+    tray.setImage(nativeImage.createFromPath(path.join(__dirname, 'img/cloudTemplate.png')));
+
+    const contextMenu = Menu.buildFromTemplate([
+        { label: 'Item1', type: 'radio' },
+        { label: 'Item2', type: 'radio' },
+        { label: 'Item3', type: 'radio', checked: true },
+        { label: 'Item4', type: 'radio' }
+    ])
+    tray.setToolTip('This is my application.')
+    tray.setContextMenu(contextMenu)
+})
 
 app.on('ready', createWindow);
 app.allowRendererProcessReuse = true;
